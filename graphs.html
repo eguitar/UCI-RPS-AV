@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Load CSS and JS files -->
+    <!-- 
+        Load your custom scripts!
+        These can retrieve and send data for the frontend,
+        as well as change the way the website looks!
+    -->
+    <link rel="stylesheet" href="graphs_styles.css">
+    <title>RP Solids Ground Station</title>
+    <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/epoch/0.8.4/js/epoch.min.js"></script>
+<script src="graphs.js"></script>
+
+<body class="body">
+
+<div class="top-text">Graphs</div>
+
+
+<div class="top-row">
+    <div class="section">
+        <div class="graph-box">
+            <div id="lineChart" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData = [{label: "Series 1", 
+                values: [{time: getTimeValue(), y:0}, {time: getTimeValue(), y: getRandomValue()}, {time: getTimeValue(), y: getRandomValue()}   ]}, ];
+                var myChart = $('#lineChart').epoch({
+                type: 'time.line',
+                data: lineChartData
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
+        <div class="graph-text">Altitude vs Time</div>
+    </div>
+    <div class="section">
+        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-text">Acceleration vs Time</div>
+    </div>
+    <div class="section">
+        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-text">Velocity vs Time</div>
+    </div>
+</div>
+
+<div class="bottom-row">
+    <div class="section">
+        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-text">Orientation vs Time</div>
+    </div>
+    <div class="section">
+        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-text">Pressure vs Time</div>
+    </div>
+    <div class="section">
+        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-text">Temperature vs Time</div>
+    </div>
+</div>
+
+<div class="bottom-text">
+  <p><b>UCI Rocket Project Solids 2023-2024</b></p>
+</div>
+
+    
+        
+</body>
+</html>
