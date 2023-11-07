@@ -76,7 +76,32 @@ body {
     color: #03e9f4;
     font-size: 12px;
   }
+
+  .login-box button{
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(0,0,0,.5);
+    color: #03e9f4;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-top: 20px;
+    letter-spacing: 4px;
+    border: none;
+  }
+
+  .login-box button:hover{
+    background: #03e9f4;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+  }
   
+  /*
   .login-box form a {
     position: relative;
     display: inline-block;
@@ -89,16 +114,6 @@ body {
     transition: .5s;
     margin-top: 40px;
     letter-spacing: 4px
-  }
-  
-  .login-box a:hover {
-    background: #03e9f4;
-    color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-                0 0 25px #03e9f4,
-                0 0 50px #03e9f4,
-                0 0 100px #03e9f4;
   }
   
   .login-box a span {
@@ -179,4 +194,10 @@ body {
     50%,100% {
       bottom: 100%;
     }
+  }
+*/
+  .login-box-message{
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #cc3333;
   }

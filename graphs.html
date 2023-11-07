@@ -29,11 +29,13 @@
         <div class="graph-box">
             <div id="lineChart" class="epoch category10" style="height: 100%;"></div>
             <script >
-                var lineChartData = [{label: "Series 1", 
-                values: [{time: getTimeValue(), y:0}, {time: getTimeValue(), y: getRandomValue()}, {time: getTimeValue(), y: getRandomValue()}   ]}, ];
+                var leftRange = [0,100];
+                var lineChartData = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
                 var myChart = $('#lineChart').epoch({
                 type: 'time.line',
-                data: lineChartData
+                data: lineChartData,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
                 });
                 
             </script>
