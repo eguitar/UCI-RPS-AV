@@ -21,8 +21,9 @@ function getTimeValue() {
       }]
     }, ];
     */
-    myChart.push(newLineChartData);
+    myChart1.push(newLineChartData);
   }
   
+function checkTracker() {
   
-  var lineChartInstance = new Epoch.Time.Line({data: lineChartData, range: {left: 'range-l'}});
+}

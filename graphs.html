@@ -27,14 +27,13 @@
 <div class="top-row">
     <div class="section">
         <div class="graph-box">
-            <div id="lineChart" class="epoch category10" style="height: 100%;"></div>
+            <div id="lineChart1" class="epoch category10" style="height: 100%;"></div>
             <script >
-                var leftRange = [0,100];
-                var lineChartData = [{label: "Series 1", range: 'range-l',
+                var lineChartData1 = [{label: "Series 1", range: 'range-l',
                 values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
-                var myChart = $('#lineChart').epoch({
+                var myChart1 = $('#lineChart1').epoch({
                 type: 'time.line',
-                data: lineChartData,
+                data: lineChartData1,
                 range:{left: 'range-l'}, axes: ['left', 'bottom']
                 });
                 
@@ -45,26 +44,96 @@
         <div class="graph-text">Altitude vs Time</div>
     </div>
     <div class="section">
-        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-box">
+            <div id="lineChart2" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData2 = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
+                var myChart2 = $('#lineChart2').epoch({
+                type: 'time.line',
+                data: lineChartData2,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
         <div class="graph-text">Acceleration vs Time</div>
     </div>
     <div class="section">
-        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-box">
+            <div id="lineChart3" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData3 = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
+                var myChart3 = $('#lineChart3').epoch({
+                type: 'time.line',
+                data: lineChartData3,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
         <div class="graph-text">Velocity vs Time</div>
     </div>
 </div>
 
 <div class="bottom-row">
     <div class="section">
-        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-box">
+            <div id="lineChart4" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData4 = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
+                var myChart4 = $('#lineChart4').epoch({
+                type: 'time.line',
+                data: lineChartData4,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
         <div class="graph-text">Orientation vs Time</div>
     </div>
     <div class="section">
-        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-box">
+            <div id="lineChart5" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData5 = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
+                var myChart5 = $('#lineChart5').epoch({
+                type: 'time.line',
+                data: lineChartData5,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
         <div class="graph-text">Pressure vs Time</div>
     </div>
     <div class="section">
-        <div class="graph-box">Graph Goes Here</div>
+        <div class="graph-box">
+            <div id="lineChart6" class="epoch category10" style="height: 100%;"></div>
+            <script >
+                var lineChartData6 = [{label: "Series 1", range: 'range-l',
+                values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
+                var myChart6 = $('#lineChart6').epoch({
+                type: 'time.line',
+                data: lineChartData6,
+                range:{left: 'range-l'}, axes: ['left', 'bottom']
+                });
+                
+            </script>
+            
+            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
+        </div>
         <div class="graph-text">Temperature vs Time</div>
     </div>
 </div>

@@ -1,14 +1,15 @@
-function setFormMessage(formElement, message) {
-    formElement.textContent = message;
-}
+const loginForm = document.getElementById("login-form");
+const loginButton = document.getElementById("login-form-submit");
+const loginErrorMsg = document.getElementById("login-error-msg");
 
+loginButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    const username = loginForm.username.value;
+    const password = loginForm.password.value;
 
-document.addEventListener("DOMContentLoaded", () =>{
-    const loginBox = document.querySelector("#submit");
-
-    loginBox.addEventListener("submit", e =>{
-        e.preventDefault();
-        //Perform Fetch login
-        setFormMessage(loginBox, "Invalid username/password combination");
-})
+    if (username === "1" && password === "1") {
+        location.replace("file:///c%3A/Users/seany/RP%20AV%20Ground%20Station/graphs.html")
+    } else {
+        loginErrorMsg.style.opacity = 1;
+    }
 })

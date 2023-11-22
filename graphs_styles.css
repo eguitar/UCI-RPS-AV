@@ -18,11 +18,13 @@
 }
 
 .section{
-    display: inline-block;
     position: relative;
-    width: 33%;
+    float: left;
+    width: 31%;
     height: 100%;
+    margin-right: 2%;
 }
+.section:last-child {margin-right: 0%;}
 
 .graph-box{
     position: relative;
