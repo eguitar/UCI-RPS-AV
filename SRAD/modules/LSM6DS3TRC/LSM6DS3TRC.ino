@@ -1,13 +1,4 @@
-// Basic demo for accelerometer/gyro readings from Adafruit LSM6DS3TR-C
-
 #include <Adafruit_LSM6DS3TRC.h>
-
-// For SPI mode, we need a CS pin
-// #define LSM_CS 10
-// For software-SPI mode we need SCK/MOSI/MISO pins
-// #define LSM_SCK 13
-// #define LSM_MISO 12
-// #define LSM_MOSI 11
 
 Adafruit_LSM6DS3TRC lsm6ds3trc;
 
@@ -16,11 +7,7 @@ void setup(void) {
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
 
-  Serial.println("Adafruit LSM6DS3TR-C test!");
-
   if (!lsm6ds3trc.begin_I2C()) {
-    // if (!lsm6ds3trc.begin_SPI(LSM_CS)) {
-    // if (!lsm6ds3trc.begin_SPI(LSM_CS, LSM_SCK, LSM_MISO, LSM_MOSI)) {
     Serial.println("Failed to find LSM6DS3TR-C chip");
     while (1) {
       delay(10);
