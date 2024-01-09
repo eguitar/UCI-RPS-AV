@@ -6,29 +6,18 @@
 #include <Adafruit_LIS3DH.h>
 #include <Adafruit_Sensor.h>
 
-// Used for software SPI
-#define LIS3DH_CLK 13
-#define LIS3DH_MISO 12
-#define LIS3DH_MOSI 11
-// Used for hardware & software SPI
-#define LIS3DH_CS 10
-
-// software SPI
-//Adafruit_LIS3DH lis = Adafruit_LIS3DH(LIS3DH_CS, LIS3DH_MOSI, LIS3DH_MISO, LIS3DH_CLK);
-// hardware SPI
-//Adafruit_LIS3DH lis = Adafruit_LIS3DH(LIS3DH_CS);
 // I2C
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 
 void setup(void) {
   Serial.begin(115200);
-  while (!Serial) delay(10);     // will pause Zero, Leonardo, etc until serial console opens
-
+  while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
   Serial.println("LIS3DH test!");
 
   if (! lis.begin(0x19)) {   // change this to 0x19 for alternative i2c address
     Serial.println("Couldnt start");
-    while (1) yield();
+    Serial.println();
+    while (1);
   }
   Serial.println("LIS3DH found!");
 
