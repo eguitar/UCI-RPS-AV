@@ -24,8 +24,40 @@
 <div class="top-text">Graphs</div>
 
 <div class="alert">
-    <span class="closebtn">&times;</span>  
-    <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+    <strong>Lift-Off!</strong> Rocket has started accelerating!
+  </div>
+  <script>
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+    
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function(){
+        var div = this.parentElement;
+        div.style.opacity = "0";
+        setTimeout(function(){ div.style.display = "none"; }, 600);
+      }
+    }
+    </script>
+<div class="alert" style="background-color: coral;">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+    <strong>Drogue Parachute Deployed!</strong> Rocket is coming back down!
+  </div>
+  <script>
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+    
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function(){
+        var div = this.parentElement;
+        div.style.opacity = "0";
+        setTimeout(function(){ div.style.display = "none"; }, 600);
+      }
+    }
+    </script>
+<div class="alert" style="background-color: darkgoldenrod;">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+    <strong>Main Parachute Deployed!</strong> Rocket has started decelerating!
   </div>
   <script>
     var close = document.getElementsByClassName("closebtn");
