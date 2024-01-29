@@ -25,7 +25,6 @@ const int backup_delay = 2500;
 bool launch_flag;
 bool drogue_flag;
 bool main_flag;
-bool peak;
 int fall_counter;
 float pre_alt;
 
@@ -34,9 +33,9 @@ float pre_alt;
 
 void setup() {
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
-  delay(10000);
+  delay(2000);
 
   // Serial.print("FLIGHT COMPUTER ON\n");
   // tone(buzzer, 440, 1000);
@@ -75,36 +74,11 @@ void setup() {
 
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
 
-  launch_flag = true;
+  launch_flag = false;
   drogue_flag = false;
   main_flag = false;
   fall_counter = 0;
   pre_alt = 0;
-  peak = false;
-
-  // delay(10000);
-  digitalWrite(drogue_1, HIGH);
-  delay(500);
-  digitalWrite(drogue_1, LOW);
-  Serial.println("DROGUE 1 FIRE++++++++++++++++++++");
-
-  // delay(10000);
-  digitalWrite(drogue_2, HIGH);
-  delay(500);
-  digitalWrite(drogue_2, LOW);
-  Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
-
-  // delay(10000);
-  digitalWrite(main_1, HIGH);
-  delay(500);
-  digitalWrite(main_1, LOW);
-  Serial.println("MAIN 1 FIRE++++++++++++++++++++");
-
-  // delay(10000);
-  digitalWrite(main_2, HIGH);
-  delay(500);
-  digitalWrite(main_2, LOW);
-  Serial.println("MAIN 2 FIRE++++++++++++++++++++");
 }
 
 // #######################################################################
@@ -166,22 +140,6 @@ void loop() {
   }
   else if (launch_flag == true && drogue_flag == false) {
     
-
-    if (alt > 3400 && peak == false)
-    {
-      digitalWrite(drogue_1, HIGH);
-      digitalWrite(drogue_2, HIGH);
-      digitalWrite(main_1, HIGH);
-      digitalWrite(main_2, HIGH);
-      delay(500);
-      digitalWrite(drogue_1, LOW);
-      digitalWrite(drogue_2, LOW);
-      digitalWrite(main_1, LOW);
-      digitalWrite(main_2, LOW);
-    }
-
-
-
     if (fall_counter > 3 && pre_alt - alt > 0) { // unsure still!!!!!
       drogue_flag = true;
       digitalWrite(drogue_1, HIGH);
@@ -193,15 +151,6 @@ void loop() {
       delay(charge_delay);
       digitalWrite(drogue_2, LOW);
       Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
-      String dataString = "0,0,0,0,0,0,0,0,0,0,0,0";
-      File dataFile = SD.open("data_log.csv", FILE_WRITE);
-      if (dataFile) {
-        dataFile.println(dataString);
-        dataFile.close();
-      }
-      else {
-        Serial.println("Error Opening Data File.\n");
-      }
     }
     else if (pre_alt - alt > 0) {
       fall_counter = fall_counter + 1;
@@ -214,7 +163,7 @@ void loop() {
   }
   else if (launch_flag == true && main_flag == false) {
     
-    if (alt < 1200) { // eject condition for main - 1,750 ft alt
+    if (alt < 1750) { // eject condition for main - 1,750 ft alt
       main_flag = true;
       digitalWrite(main_1, HIGH);
       delay(charge_delay);
@@ -225,17 +174,6 @@ void loop() {
       delay(charge_delay);
       digitalWrite(main_2, LOW);
       Serial.println("MAIN 2 FIRE++++++++++++++++++++");
-
-      String dataString = "1,1,1,1,1,1,1,1,1,1,1,1";
-      File dataFile = SD.open("data_log.csv", FILE_WRITE);
-      if (dataFile) {
-        dataFile.println(dataString);
-        dataFile.close();
-      }
-      else {
-        Serial.println("Error Opening Data File.\n");
-      }
-
     }
     else {
       Serial.println("FALLING--------------------");
