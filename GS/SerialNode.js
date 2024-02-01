@@ -17,5 +17,5 @@ port.pipe(parser);
 //Read the data from serial port
 parser.on("data", (line) => console.log(line));
 
-//Write data to serial port (if necessary)
+//Write data to serial port
 port.write("Writing to port");
