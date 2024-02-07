@@ -1,17 +1,15 @@
 //Imports dependencies
-const SerialPort  = require("serialport");
-const ReadLine  = require("@serialport/parser-readline");
+import { SerialPort } from "serialport";
+import { ReadlineParser } from '@serialport/parser-readline';
 
 //Define the serial port
-const port = new SerialPort("COM3", {
-  //Change port to port that is connected to Arduino
-  //Requires an Arduino to communcaite with
-  //To read Arduino needs to write something
-  baudRate: 9600,
+const port = new SerialPort({
+  path:"COM5",
+  baudRate: 57600,
 });
 
 //Serial port parser
-const parser = new ReadLine();
+const parser = new ReadlineParser();
 port.pipe(parser);
 
 //Read the data from serial port
