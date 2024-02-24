@@ -103,9 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => GraphsPage()),
                   );
                 },
+                // style: ElevatedButton.styleFrom(
+                //   primary: Colors.white,
+                //   onPrimary: Colors.black,
+                // ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.black,
+                  foregroundColor: Colors.black, backgroundColor: Colors.white,
                 ),
                 child: Text('Login'),
               ),
