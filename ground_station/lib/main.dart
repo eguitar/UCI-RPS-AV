@@ -5,12 +5,7 @@ import 'package:ground_station/screens/login.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<void> main() async {
-  if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
-    sqfliteFfiInit();
-  }
-  databaseFactory = databaseFactoryFfi;
+void main() async {
   runApp(MyApp());
 }
 
