@@ -17,8 +17,10 @@ class GraphsPage extends StatefulWidget {
 }
 
 class _GraphsPageState extends State<GraphsPage> {
-  late SerialPort port = SerialPort(port_Number);
+  late SerialPort port = SerialPort("COM8");
   StringBuffer buffer = StringBuffer();
+
+  bool main_fire_1 = false;
 
   void showSnackbar(String message) {
     final snackBar = SnackBar(
@@ -76,6 +78,8 @@ class _GraphsPageState extends State<GraphsPage> {
   late double mag_y;
   late double mag_z;
 
+  int fallCounter = 0;
+
   void formatSensorData(String data) {
     List<String> values = data.split(',');
     if (values.length == 12) {
@@ -91,6 +95,21 @@ class _GraphsPageState extends State<GraphsPage> {
       double mag_x = double.parse(values[9]);
       double mag_y = double.parse(values[10]);
       double mag_z = double.parse(values[11]);
+
+      if (acc_x.abs() > 30 || acc_y.abs() > 30 || acc_z.abs() > 30) {
+        showSnackbar("ROCKET LAUNCH++++++++++++++++++++");
+      }
+      if (altitude >= 1750 && main_fire_1 == false) {
+        showSnackbar("MAIN 1 FIRE++++++++++++++++++++");
+        setState(() {
+          main_fire_1 = true;
+        });
+      }
+      if (acc_y < 0) {
+        showSnackbar("Falling...");
+      } else {
+        showSnackbar("NO LAUNCH--------------------");
+      }
 
       altitudeStreamController.add(altitude);
       acceleration_x_StreamController.add(acc_x);
@@ -322,7 +341,7 @@ class _AltitudeGraphState extends State<AltitudeGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Altitude",
+      title: "Altitude in m",
       dataStream: widget.streamController.stream,
     );
   }
@@ -394,7 +413,7 @@ class _MagnetometerXGraphState extends State<MagnetometerXGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer X",
+      title: "Magnetic Field  X",
       dataStream: widget.streamController.stream,
     );
   }
@@ -412,7 +431,7 @@ class _MagnetometerYGraphState extends State<MagnetometerYGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer Y",
+      title: "Magnetic Field  Y",
       dataStream: widget.streamController.stream,
     );
   }
@@ -430,7 +449,7 @@ class _MagnetometerZGraphState extends State<MagnetometerZGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer Z",
+      title: "Magnetic Field  Z",
       dataStream: widget.streamController.stream,
     );
   }
