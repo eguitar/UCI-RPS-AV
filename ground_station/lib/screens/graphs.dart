@@ -1,11 +1,13 @@
+// ignore_for_file: unused_catch_stack, must_be_immutable
+
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
+// import 'dart:convert';
+// import 'dart:io';
+// import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:ground_station/constants/Port_details.dart';
 import 'package:real_time_chart/real_time_chart.dart';
-import 'dart:math';
+// import 'dart:math';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:libserialport/libserialport.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
