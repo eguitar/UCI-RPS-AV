@@ -8,6 +8,7 @@ import 'package:real_time_chart/real_time_chart.dart';
 import 'dart:math';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:libserialport/libserialport.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class GraphsPage extends StatefulWidget {
   const GraphsPage({Key? key}) : super(key: key);
@@ -17,15 +18,17 @@ class GraphsPage extends StatefulWidget {
 }
 
 class _GraphsPageState extends State<GraphsPage> {
-  late SerialPort port = SerialPort("COM8");
+  late SerialPort port = SerialPort("COM10");
   StringBuffer buffer = StringBuffer();
+  double currentMax = 0;
 
+  // ignore: non_constant_identifier_names
   bool main_fire_1 = false;
 
   void showSnackbar(String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
