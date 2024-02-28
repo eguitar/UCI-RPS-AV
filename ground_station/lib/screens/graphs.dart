@@ -10,6 +10,7 @@ import 'package:real_time_chart/real_time_chart.dart';
 // import 'dart:math';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:libserialport/libserialport.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class GraphsPage extends StatefulWidget {
   const GraphsPage({Key? key}) : super(key: key);
@@ -19,13 +20,17 @@ class GraphsPage extends StatefulWidget {
 }
 
 class _GraphsPageState extends State<GraphsPage> {
-  late SerialPort port = SerialPort(portNumber);
+  late SerialPort port = SerialPort("COM10");
   StringBuffer buffer = StringBuffer();
+  double currentMax = 0;
+
+  // ignore: non_constant_identifier_names
+  bool main_fire_1 = false;
 
   void showSnackbar(String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -78,6 +83,8 @@ class _GraphsPageState extends State<GraphsPage> {
   late double mag_y;
   late double mag_z;
 
+  int fallCounter = 0;
+
   void formatSensorData(String data) {
     List<String> values = data.split(',');
     if (values.length == 12) {
@@ -93,6 +100,21 @@ class _GraphsPageState extends State<GraphsPage> {
       double mag_x = double.parse(values[9]);
       double mag_y = double.parse(values[10]);
       double mag_z = double.parse(values[11]);
+
+      if (acc_x.abs() > 30 || acc_y.abs() > 30 || acc_z.abs() > 30) {
+        showSnackbar("ROCKET LAUNCH++++++++++++++++++++");
+      }
+      if (altitude >= 1750 && main_fire_1 == false) {
+        showSnackbar("MAIN 1 FIRE++++++++++++++++++++");
+        setState(() {
+          main_fire_1 = true;
+        });
+      }
+      if (acc_y < 0) {
+        showSnackbar("Falling...");
+      } else {
+        showSnackbar("NO LAUNCH--------------------");
+      }
 
       altitudeStreamController.add(altitude);
       acceleration_x_StreamController.add(acc_x);
@@ -324,7 +346,7 @@ class _AltitudeGraphState extends State<AltitudeGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Altitude",
+      title: "Altitude in m",
       dataStream: widget.streamController.stream,
     );
   }
@@ -396,7 +418,7 @@ class _MagnetometerXGraphState extends State<MagnetometerXGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer X",
+      title: "Magnetic Field  X",
       dataStream: widget.streamController.stream,
     );
   }
@@ -414,7 +436,7 @@ class _MagnetometerYGraphState extends State<MagnetometerYGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer Y",
+      title: "Magnetic Field  Y",
       dataStream: widget.streamController.stream,
     );
   }
@@ -432,7 +454,7 @@ class _MagnetometerZGraphState extends State<MagnetometerZGraph> {
   @override
   Widget build(BuildContext context) {
     return SensorDataGraph(
-      title: "Magnetometer Z",
+      title: "Magnetic Field  Z",
       dataStream: widget.streamController.stream,
     );
   }
