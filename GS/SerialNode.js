@@ -3,11 +3,11 @@ const SerialPort  = require("serialport");
 const ReadLine  = require("@serialport/parser-readline");
 
 //Define the serial port
-const port = new SerialPort("COM3", {
+const port = new SerialPort("/dev/cu.usbserial-2140", {
   //Change port to port that is connected to Arduino
   //Requires an Arduino to communcaite with
-  //To read Arduino needs to write something
-  baudRate: 9600,
+  //To read Arduino needs to write something 
+  baudRate: 57600,
 });
 
 //Serial port parser

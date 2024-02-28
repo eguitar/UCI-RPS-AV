@@ -1,4 +1,4 @@
-
+ 
 // Basic demo for accelerometer readings from Adafruit LIS3DH
 
 #include <Wire.h>

@@ -1,7 +1,6 @@
 // UCI RP - SOLIDS - AVIONICS
 
 #include <SD.h>
-#include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LIS3MDL.h>
