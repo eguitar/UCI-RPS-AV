@@ -17,8 +17,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/epoch/0.8.4/js/epoch.min.js"></script>
-<script src="graphs.js"></script>
-
 <body class="body">
 
 <div class="top-text">Graphs</div>
@@ -71,11 +69,12 @@
       }
     }
     </script>
+
 <div class="top-row">
     <div class="section">
         <div class="graph-box">
             <div id="lineChart1" class="epoch category10" style="height: 100%;"></div>
-            <script >
+            <script>
                 var lineChartData1 = [{label: "Series 1", range: 'range-l',
                 values: [{time: 169808190, y:0}, {time: 1698908190, y: 20}, {time: 1698908190, y: 80}   ]}, ];
                 var myChart1 = $('#lineChart1').epoch({
@@ -83,10 +82,7 @@
                 data: lineChartData1,
                 range:{left: 'range-l'}, axes: ['left', 'bottom']
                 });
-                
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Altitude vs Time</div>
     </div>
@@ -103,8 +99,6 @@
                 });
                 
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Acceleration vs Time</div>
     </div>
@@ -121,8 +115,6 @@
                 });
                 
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Velocity vs Time</div>
     </div>
@@ -142,8 +134,6 @@
                 });
                 
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Orientation vs Time</div>
     </div>
@@ -160,8 +150,6 @@
                 });
                 
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Pressure vs Time</div>
     </div>
@@ -178,8 +166,6 @@
                 });
                 
             </script>
-            
-            <p class="button-7" onclick="updateGraph()">click me to update chart</p>
         </div>
         <div class="graph-text">Temperature vs Time</div>
     </div>
@@ -189,7 +175,8 @@
   <p><b>UCI Rocket Project Solids 2023-2024</b></p>
 </div>
 
-    
+<script src="graphs.js"></script>
+
         
 </body>
 </html>

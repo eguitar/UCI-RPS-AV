@@ -24,10 +24,10 @@ function getTimeValue() {
     return Time;
   }
 
-  function getRandomValue() {
-    var randomValue = Math.random() * 100;
-    return randomValue;
-  }
+  // function getRandomValue() {
+  //   var randomValue = Math.random() * 100;
+  //   return randomValue;
+  // }
 
   function getAltitudeValue(altitudestr) {
     var altitude = altitudestr.split(',')[0];
@@ -40,6 +40,3 @@ function getTimeValue() {
     myChart1.push(newLineChartData);
   }
   
-function checkTracker() {
-  
-}

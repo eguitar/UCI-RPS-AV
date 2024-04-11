@@ -1,30 +1,26 @@
-function setFormMessage(formElement, type, message) {
-    const messageElement = formElement.querySelector(".form__message");
+import * as THREE from 'three';
 
-    messageElement.textContent = message;
-    messageElement.classList.remove("form__message--success", "form__message--error");
-    messageElement.classList.add(`form__message--${type}`);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
+
+function animate() {
+	requestAnimationFrame( animate );
+
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
+
+	renderer.render( scene, camera );
 }
 
-function setInputError(inputElement, message) {
-    inputElement.classList.add("form__input--error");
-    inputElement.parentElement.querySelector(".form__input-error-message").textContent = message;
-}
-
-function clearInputError(inputElement) {
-    inputElement.classList.remove("form__input--error");
-    inputElement.parentElement.querySelector(".form__input-error-message").textContent = "";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.querySelector("#login");
-
-    loginForm.addEventListener("submit", e => {
-        e.preventDefault();
-
-        // Perform your AJAX/Fetch login
-
-        setFormMessage(loginForm, "error", "Invalid username/password combination");
-    });
-
-});
+animate();
