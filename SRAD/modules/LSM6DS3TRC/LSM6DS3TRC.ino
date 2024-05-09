@@ -7,7 +7,7 @@ void setup(void) {
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
 
-  if (!lsm6ds3trc.begin_I2C()) {
+  if (!lsm6ds3trc.begin_I2C(0x6A, &Wire2)) {
     Serial.println("Failed to find LSM6DS3TR-C chip");
     while (1) {
       delay(10);
