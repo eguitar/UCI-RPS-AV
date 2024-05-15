@@ -7,19 +7,20 @@
 #include <Adafruit_LSM6DS3TRC.h>
 #include <SoftwareSerial.h>
 // ----------------------------
-#define main_1 7     // main primary
-#define main_2 8     // main secondary     
-#define drogue_1 9   // drogue primary
-#define drogue_2 10  // drogue secondary
+#define main_1 4     // main primary
+#define main_2 2     // main secondary     
+#define drogue_1 7   // drogue primary
+#define drogue_2 9  // drogue secondary
 #define buzzer 6    // buzzer
 #define SEALEVELPRESSURE_HPA (1013.25)
 // ----------------------------
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 Adafruit_LSM6DS3TRC lsm;
+Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 SoftwareSerial mySerial(0,1); // RX, TX
 // ----------------------------
-const int delay_time = 500;
+const int delay_time = 1000;
 const int charge_delay = 500;
 const int backup_delay = 2500;
 bool launch_flag;
@@ -27,6 +28,7 @@ bool drogue_flag;
 bool main_flag;
 bool lis3mdl;
 bool lis3dh;
+int stage
 int fall_counter;
 float pre_alt;
 
@@ -61,7 +63,7 @@ void setup() {
   // Serial.print("SD-CARD initialized.\n");
 
   // Serial.print("Connecting to BMP3XX...");
-  if (!bmp.begin_I2C(0x77, &Wire2)) {
+  if (!bmp.begin_I2C()) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("BMP3XX not found");
     exit(0);
@@ -69,7 +71,7 @@ void setup() {
   // Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
-  if (!lsm.begin_I2C(0x6A, &Wire2)) {
+  if (!lsm.begin_I2C()) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("LSM6DS3TR-C not found");
     exit(0);
@@ -78,7 +80,7 @@ void setup() {
 
   lis3mdl = true;
   // Serial.print("Connecting to LIS3MDL...");
-  if (!mdl.begin_I2C(0x1C, &Wire2)) {
+  if (!mdl.begin_I2C()) {
     Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
     writeSD("LIS3MDL not found");
@@ -93,6 +95,7 @@ void setup() {
   main_flag = false;
   fall_counter = 0;
   pre_alt = 0;
+  stage = -1;
 
   writeSD("Successful Initialization");
 }
@@ -147,6 +150,7 @@ void loop() {
 
     if (abs(acc_x) > 30) {      // launch condition for rocket - acceleration spikes
       launch_flag = true;
+      stage = 0;
       // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
     else if (abs(acc_y) > 30) { // launch condition for rocket - acceleration spikes
@@ -165,6 +169,7 @@ void loop() {
     
     if (fall_counter > 3 && pre_alt - alt > 0) {
       drogue_flag = true;
+      stage = 1;
       digitalWrite(drogue_1, HIGH);
       delay(charge_delay);
       digitalWrite(drogue_1, LOW);
@@ -176,6 +181,7 @@ void loop() {
       // Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
 
       writeSD("DROGUE EJECTED");
+
     }
     else if (pre_alt - alt > 0) {
       fall_counter = fall_counter + 1;
@@ -191,6 +197,7 @@ void loop() {
     
     if (alt < 1000) { // eject condition for main - 1,750 ft alt
       main_flag = true;
+      stage = 2;
       digitalWrite(main_1, HIGH);
       delay(charge_delay);
       digitalWrite(main_1, LOW);
@@ -221,7 +228,8 @@ void loop() {
                       String(gyro_z) + "," +
                       String(mag_x) + "," +
                       String(mag_y) + "," +
-                      String(mag_z);
+                      String(mag_z) + "," +
+                      String(stage);
                       
   Serial.println(dataString);
   mySerial.println(dataString);

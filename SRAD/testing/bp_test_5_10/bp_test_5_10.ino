@@ -12,7 +12,7 @@ void setup() {
   // put your setup code here, to run once:
 
   tone(buzzer, 1000);
-  delay(3000);
+  delay(30000);
   noTone(buzzer);
 
   Serial.print("FLIGHT COMPUTER ON\n");

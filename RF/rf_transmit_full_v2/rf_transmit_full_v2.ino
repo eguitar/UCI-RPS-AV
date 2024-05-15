@@ -21,7 +21,7 @@ Adafruit_LSM6DS3TRC lsm;
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 SoftwareSerial mySerial(0,1); // RX, TX
 // ----------------------------
-const int delay_time = 500;
+const int delay_time = 1000;
 const int charge_delay = 500;
 const int backup_delay = 2500;
 bool launch_flag;
@@ -35,36 +35,36 @@ float pre_alt;
 // #######################################################################
 // #######################################################################
 
-void writeSD(String data) {
-  File dataFile = SD.open("data_log.csv", FILE_WRITE);  
-  if (dataFile) {
-    dataFile.println(data);
-    dataFile.close();
-  }
-  else {
-    Serial.println("Error Opening Data File.\n");
-  }
-}
+// void writeSD(String data) {
+//   File dataFile = SD.open("data_log.csv", FILE_WRITE);  
+//   if (dataFile) {
+//     dataFile.println(data);
+//     dataFile.close();
+//   }
+//   else {
+//     Serial.println("Error Opening Data File.\n");
+//   }
+// }
 
 void setup() {
-  tone(buzzer, 3000, 3000);
+  // tone(buzzer, 3000, 3000);
 
   // Serial.print("FLIGHT COMPUTER ON\n");
 
   Serial.begin(115200);
   mySerial.begin(57600);
 
-  // Serial.print("Initializing SD card...");
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    // Serial.print("card failed, or not present.\n");
-    exit(0);
-  }
-  // Serial.print("SD-CARD initialized.\n");
+  // // Serial.print("Initializing SD card...");
+  // if (!SD.begin(BUILTIN_SDCARD)) {
+  //   // Serial.print("card failed, or not present.\n");
+  //   exit(0);
+  // }
+  // // Serial.print("SD-CARD initialized.\n");
 
   // Serial.print("Connecting to BMP3XX...");
   if (!bmp.begin_I2C()) {
     // Serial.print("sensor not found, check wiring!\n");
-    writeSD("BMP3XX not found");
+    // writeSD("BMP3XX not found");
     exit(0);
   }
   // Serial.print("BMP3XX found.\n");
@@ -72,7 +72,7 @@ void setup() {
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C()) {
     // Serial.print("sensor not found, check wiring!\n");
-    writeSD("LSM6DS3TR-C not found");
+    // writeSD("LSM6DS3TR-C not found");
     exit(0);
   }
   // Serial.print("LSM6DS3TR-C found.\n");
@@ -82,7 +82,7 @@ void setup() {
   if (!mdl.begin_I2C()) {
     Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
-    writeSD("LIS3MDL not found");
+    // writeSD("LIS3MDL not found");
     // exit(0);
   }
   // Serial.print("LIS3MDL found.\n");
@@ -92,7 +92,7 @@ void setup() {
   if (!lis.begin(0x18)) {
     Serial.print("sensor not found, check wiring!\n");
     lis3dh = false;
-    writeSD("LIS3DH not found");
+    // writeSD("LIS3DH not found");
     // exit(0);
   }
   // Serial.print("LIS3DH found.\n");  
@@ -105,7 +105,7 @@ void setup() {
   fall_counter = 0;
   pre_alt = 0;
 
-  writeSD("Successful Initialization");
+  // writeSD("Successful Initialization");
 }
 
 // #######################################################################
@@ -188,7 +188,7 @@ void loop() {
   Serial.println(dataString);
   mySerial.println(dataString);
   
-  writeSD(dataString);
+  // writeSD(dataString);
   
   // --------------------------------------------------
   delay(delay_time);
