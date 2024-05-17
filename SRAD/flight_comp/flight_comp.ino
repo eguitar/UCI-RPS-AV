@@ -5,6 +5,7 @@
 #include <Adafruit_LIS3MDL.h>
 #include "Adafruit_BMP3XX.h"
 #include <Adafruit_LSM6DS3TRC.h>
+#include <Adafruit_LIS3DH.h>
 #include <SoftwareSerial.h>
 // ----------------------------
 #define main_1 4     // main primary
@@ -28,7 +29,7 @@ bool drogue_flag;
 bool main_flag;
 bool lis3mdl;
 bool lis3dh;
-int stage
+int stage;
 int fall_counter;
 float pre_alt;
 
@@ -87,6 +88,16 @@ void setup() {
     // exit(0);
   }
   // Serial.print("LIS3MDL found.\n");
+
+  lis3dh = true;
+  // Serial.print("Connecting to LIS3DH...");
+  if (!lis.begin(0x18)) {
+    Serial.print("sensor not found, check wiring!\n");
+    lis3dh = false;
+    writeSD("LIS3DH not found");
+    // exit(0);
+  }
+  // Serial.print("LIS3DH found.\n");  
   
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
 
@@ -107,6 +118,7 @@ float alt, temp, pres;
 float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
 float mag_x, mag_y, mag_z;
+float acc_x_2, acc_y_2, acc_z_2;
 
 void loop() {
   // tone(buzzer, 2000, 500); // comment out for actual flight
@@ -144,6 +156,19 @@ void loop() {
     mag_y = 0.0;
     mag_z = 0.0;
   }
+
+  if (lis3dh) {
+    sensors_event_t acel;
+    lis.getEvent(&acel);
+    acc_x_2 = acel.acceleration.x;
+    acc_y_2 = acel.acceleration.y;
+    acc_z_2 = acel.acceleration.z;
+  }
+  else {
+    acc_x_2 = 0.0;
+    acc_y_2 = 0.0;
+    acc_z_2 = 0.0;
+  }
   
   // {tasks} ------------------------------------
   if (launch_flag == false) {
@@ -155,10 +180,12 @@ void loop() {
     }
     else if (abs(acc_y) > 30) { // launch condition for rocket - acceleration spikes
       launch_flag = true;
+      stage = 0;
       // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
     else if (abs(acc_z) > 30) { // launch condition for rocket - acceleration spikes
       launch_flag = true;
+      stage = 0;
       // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
     else {
@@ -179,9 +206,7 @@ void loop() {
       delay(charge_delay);
       digitalWrite(drogue_2, LOW);
       // Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
-
       writeSD("DROGUE EJECTED");
-
     }
     else if (pre_alt - alt > 0) {
       fall_counter = fall_counter + 1;
@@ -207,13 +232,18 @@ void loop() {
       delay(charge_delay);
       digitalWrite(main_2, LOW);
       // Serial.println("MAIN 2 FIRE++++++++++++++++++++");
-
       writeSD("MAIN EJECTED");
     }
     else {
       // Serial.println("FALLING--------------------");
     }
   }
+  else {
+  
+
+  
+  }
+
   pre_alt = alt;
 
   // {datalogging} ------------------------------------
@@ -229,20 +259,15 @@ void loop() {
                       String(mag_x) + "," +
                       String(mag_y) + "," +
                       String(mag_z) + "," +
+                      String(acc_x_2) + "," +
+                      String(acc_y_2) + "," +
+                      String(acc_z_2) + "," +
                       String(stage);
                       
   Serial.println(dataString);
   mySerial.println(dataString);
   
-  File dataFile = SD.open("data_log.csv", FILE_WRITE);
-  
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
-  }
-  else {
-    Serial.println("Error Opening Data File.\n");
-  }
+  writeSD(dataString);
   // --------------------------------------------------
   delay(delay_time);
 }

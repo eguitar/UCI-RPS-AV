@@ -64,7 +64,7 @@ function App() {
             acc_x_2: [...prevState.acc_x_2, parseFloat(values[12])],
             acc_y_2: [...prevState.acc_y_2, parseFloat(values[13])],
             acc_z_2: [...prevState.acc_z_2, parseFloat(values[14])],
-            state: [...prevState.state, parseFloat(values[15])]
+            state: [...prevState.state, parseInt(values[15])]
           }));
         }
         console.log();
