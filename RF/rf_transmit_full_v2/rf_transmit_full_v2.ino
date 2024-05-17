@@ -47,9 +47,9 @@ float pre_alt;
 // }
 
 void setup() {
-  // tone(buzzer, 3000, 3000);
+  tone(buzzer, 3000, 3000);
 
-  // Serial.print("FLIGHT COMPUTER ON\n");
+  Serial.print("FLIGHT COMPUTER ON\n");
 
   Serial.begin(115200);
   mySerial.begin(57600);
@@ -63,19 +63,19 @@ void setup() {
 
   // Serial.print("Connecting to BMP3XX...");
   if (!bmp.begin_I2C()) {
-    // Serial.print("sensor not found, check wiring!\n");
+    Serial.print("sensor not found, check wiring!\n");
     // writeSD("BMP3XX not found");
     exit(0);
   }
-  // Serial.print("BMP3XX found.\n");
+  Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C()) {
-    // Serial.print("sensor not found, check wiring!\n");
+    Serial.print("sensor not found, check wiring!\n");
     // writeSD("LSM6DS3TR-C not found");
     exit(0);
   }
-  // Serial.print("LSM6DS3TR-C found.\n");
+  Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
   // Serial.print("Connecting to LIS3MDL...");
@@ -85,7 +85,7 @@ void setup() {
     // writeSD("LIS3MDL not found");
     // exit(0);
   }
-  // Serial.print("LIS3MDL found.\n");
+  Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
   // Serial.print("Connecting to LIS3DH...");
@@ -95,7 +95,7 @@ void setup() {
     // writeSD("LIS3DH not found");
     // exit(0);
   }
-  // Serial.print("LIS3DH found.\n");  
+  Serial.print("LIS3DH found.\n");  
   
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
 

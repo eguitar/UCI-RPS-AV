@@ -21,34 +21,12 @@ void setup() {
 
   delay(1000);
 
-  digitalWrite(drogue_1, LOW);
-  digitalWrite(drogue_2, LOW);
-  digitalWrite(main_1, LOW);
-  digitalWrite(main_2, LOW);
-
-
-
-  digitalWrite(drogue_1, HIGH);
-  delay(charge_delay);
-  digitalWrite(drogue_1, LOW);
-  Serial.println("DROGUE 1 FIRE++++++++++++++++++++");
-  // delay(backup_delay);
-  // digitalWrite(drogue_2, HIGH);
-  // delay(charge_delay);
+  // digitalWrite(drogue_1, LOW);
   // digitalWrite(drogue_2, LOW);
-  // Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
-
-  // tone(buzzer, 3000, 1000);
-
-  digitalWrite(main_1, HIGH);
-  delay(charge_delay);
-  digitalWrite(main_1, LOW);
-  Serial.println("MAIN 1 FIRE++++++++++++++++++++");
-  // delay(backup_delay);
-  // digitalWrite(main_2, HIGH);
-  // delay(charge_delay);
+  // digitalWrite(main_1, LOW);
   // digitalWrite(main_2, LOW);
-  // Serial.println("MAIN 2 FIRE++++++++++++++++++++");
+
+
 
 
 
@@ -58,6 +36,28 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
+
+  digitalWrite(drogue_1, HIGH);
+  delay(charge_delay);
+  digitalWrite(drogue_1, LOW);
+  Serial.println("DROGUE 1 FIRE++++++++++++++++++++");
+  // delay(backup_delay);
+  digitalWrite(drogue_2, HIGH);
+  delay(charge_delay);
+  digitalWrite(drogue_2, LOW);
+  Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
+
+  // tone(buzzer, 3000, 1000);
+
+  digitalWrite(main_1, HIGH);
+  delay(charge_delay);
+  digitalWrite(main_1, LOW);
+  Serial.println("MAIN 1 FIRE++++++++++++++++++++");
+  // delay(backup_delay);
+  digitalWrite(main_2, HIGH);
+  delay(charge_delay);
+  digitalWrite(main_2, LOW);
+  Serial.println("MAIN 2 FIRE++++++++++++++++++++");
 
   // tone(buzzer, 2000, 1000);
 }
