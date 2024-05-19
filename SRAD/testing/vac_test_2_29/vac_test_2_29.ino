@@ -59,7 +59,7 @@ void setup() {
   // Serial.print("SD-CARD initialized.\n");
 
   // Serial.print("Connecting to BMP3XX...");
-  if (!bmp.begin_I2C(0x77, &Wire2)) {
+  if (!bmp.begin_I2C(0x77)) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("BMP3XX not found");
     exit(0);

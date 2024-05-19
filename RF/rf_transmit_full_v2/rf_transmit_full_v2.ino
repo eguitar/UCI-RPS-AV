@@ -8,12 +8,12 @@
 #include <Adafruit_LIS3DH.h>
 #include <SoftwareSerial.h>
 // ----------------------------
-#define main_1 7     // main primary
-#define main_2 8     // main secondary     
-#define drogue_1 9   // drogue primary
-#define drogue_2 10  // drogue secondary
+#define main_1 4     // main primary
+#define main_2 2     // main secondary     
+#define drogue_1 7   // drogue primary
+#define drogue_2 9  // drogue secondary
 #define buzzer 6    // buzzer
-#define SEALEVELPRESSURE_HPA (1017)
+#define SEALEVELPRESSURE_HPA (1013.25)
 // ----------------------------
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
@@ -29,70 +29,72 @@ bool drogue_flag;
 bool main_flag;
 bool lis3mdl;
 bool lis3dh;
+int stage;
 int fall_counter;
 float pre_alt;
 
 // #######################################################################
 // #######################################################################
 
-// void writeSD(String data) {
-//   File dataFile = SD.open("data_log.csv", FILE_WRITE);  
-//   if (dataFile) {
-//     dataFile.println(data);
-//     dataFile.close();
-//   }
-//   else {
-//     Serial.println("Error Opening Data File.\n");
-//   }
-// }
+void writeSD(String data) {
+  File dataFile = SD.open("data_log.csv", FILE_WRITE);  
+  if (dataFile) {
+    dataFile.println(data);
+    dataFile.close();
+  }
+  else {
+    Serial.println("Error Opening Data File.\n");
+  }
+}
 
 void setup() {
-  tone(buzzer, 3000, 3000);
+
+  // tone(buzzer, 3000, 5000);
 
   Serial.print("FLIGHT COMPUTER ON\n");
 
   Serial.begin(115200);
   mySerial.begin(57600);
 
-  // // Serial.print("Initializing SD card...");
-  // if (!SD.begin(BUILTIN_SDCARD)) {
-  //   // Serial.print("card failed, or not present.\n");
-  //   exit(0);
-  // }
-  // // Serial.print("SD-CARD initialized.\n");
+  Serial.print("Initializing SD card...");
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.print("card failed, or not present.\n");
+    // exit(0);
+  }
+  Serial.print("SD-CARD initialized.\n");
 
-  // Serial.print("Connecting to BMP3XX...");
-  if (!bmp.begin_I2C()) {
+  Serial.print("Connecting to BMP3XX...");
+  if (!bmp.begin_I2C(0x77)) {
     Serial.print("sensor not found, check wiring!\n");
-    // writeSD("BMP3XX not found");
-    exit(0);
+    writeSD("BMP3XX not found");
+    // exit(0);
   }
   Serial.print("BMP3XX found.\n");
 
-  // Serial.print("Connecting to LSM6DS3TR-C...");
-  if (!lsm.begin_I2C()) {
+  Serial.print("Connecting to LSM6DS3TR-C...");
+  if (!lsm.begin_I2C(0x6A)) {
     Serial.print("sensor not found, check wiring!\n");
-    // writeSD("LSM6DS3TR-C not found");
-    exit(0);
+    writeSD("LSM6DS3TR-C not found");
+    // exit(0);
   }
   Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
-  // Serial.print("Connecting to LIS3MDL...");
-  if (!mdl.begin_I2C()) {
+  Serial.print("Connecting to LIS3MDL...");
+  if (!mdl.begin_I2C(0x1C)) {
     Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
-    // writeSD("LIS3MDL not found");
+    writeSD("LIS3MDL not found");
     // exit(0);
   }
   Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
-  // Serial.print("Connecting to LIS3DH...");
+  Serial.print("Connecting to LIS3DH...");
   if (!lis.begin(0x18)) {
     Serial.print("sensor not found, check wiring!\n");
     lis3dh = false;
-    // writeSD("LIS3DH not found");
+    writeSD("LIS3DH not found");
     // exit(0);
   }
   Serial.print("LIS3DH found.\n");  
@@ -104,8 +106,9 @@ void setup() {
   main_flag = false;
   fall_counter = 0;
   pre_alt = 0;
+  stage = -1;
 
-  // writeSD("Successful Initialization");
+  writeSD("Successful Initialization");
 }
 
 // #######################################################################
@@ -158,9 +161,9 @@ void loop() {
   if (lis3dh) {
     sensors_event_t acel;
     lis.getEvent(&acel);
-    acc_x_2 = acel.magnetic.x;
-    acc_y_2 = acel.magnetic.y;
-    acc_z_2 = acel.magnetic.z;
+    acc_x_2 = acel.acceleration.x;
+    acc_y_2 = acel.acceleration.y;
+    acc_z_2 = acel.acceleration.z;
   }
   else {
     acc_x_2 = 0.0;
@@ -183,12 +186,13 @@ void loop() {
                       String(mag_z) + "," +
                       String(acc_x_2) + "," +
                       String(acc_y_2) + "," +
-                      String(acc_z_2);
+                      String(acc_z_2) + "," +
+                      String(stage);
                       
   Serial.println(dataString);
   mySerial.println(dataString);
   
-  // writeSD(dataString);
+  writeSD(dataString);
   
   // --------------------------------------------------
   delay(delay_time);

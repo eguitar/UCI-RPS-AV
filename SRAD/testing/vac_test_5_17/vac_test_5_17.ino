@@ -104,12 +104,12 @@ void setup() {
   
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
 
-  launch_flag = false;
+  launch_flag = true;
   drogue_flag = false;
   main_flag = false;
   fall_counter = 0;
   pre_alt = 0;
-  stage = -1;
+  stage = 0;
 
   writeSD("Successful Initialization");
 }
