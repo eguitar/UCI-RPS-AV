@@ -59,30 +59,33 @@ void setup() {
   // Serial.print("Initializing SD card...");
   if (!SD.begin(BUILTIN_SDCARD)) {
     // Serial.print("card failed, or not present.\n");
-    exit(0);
+    tone(buzzer, 3000, 5000);
+    // exit(0);
   }
   // Serial.print("SD-CARD initialized.\n");
 
   // Serial.print("Connecting to BMP3XX...");
-  if (!bmp.begin_I2C()) {
+  if (!bmp.begin_I2C(0x77)) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("BMP3XX not found");
-    exit(0);
+    tone(buzzer, 3000, 5000);
+    // exit(0);
   }
   // Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
-  if (!lsm.begin_I2C()) {
+  if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("LSM6DS3TR-C not found");
-    exit(0);
+    tone(buzzer, 3000, 5000);
+    // exit(0);
   }
   // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
   // Serial.print("Connecting to LIS3MDL...");
-  if (!mdl.begin_I2C()) {
-    Serial.print("sensor not found, check wiring!\n");
+  if (!mdl.begin_I2C(0x1C)) {
+    // Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
     writeSD("LIS3MDL not found");
     // exit(0);
@@ -92,7 +95,7 @@ void setup() {
   lis3dh = true;
   // Serial.print("Connecting to LIS3DH...");
   if (!lis.begin(0x18)) {
-    Serial.print("sensor not found, check wiring!\n");
+    // Serial.print("sensor not found, check wiring!\n");
     lis3dh = false;
     writeSD("LIS3DH not found");
     // exit(0);
@@ -126,6 +129,7 @@ void loop() {
   if (! bmp.performReading()) {
     // Serial.println("BMP failed to perform reading.\n");
     writeSD("BMP3XX Sensor Failure");
+    tone(buzzer, 2000, 500);
     exit(0);
   }
   
@@ -176,72 +180,59 @@ void loop() {
     if (abs(acc_x) > 30) {      // launch condition for rocket - acceleration spikes
       launch_flag = true;
       stage = 0;
-      // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
     else if (abs(acc_y) > 30) { // launch condition for rocket - acceleration spikes
       launch_flag = true;
       stage = 0;
-      // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
     else if (abs(acc_z) > 30) { // launch condition for rocket - acceleration spikes
       launch_flag = true;
       stage = 0;
-      // Serial.println("ROCKET LAUNCH++++++++++++++++++++");
     }
-    else {
-      // Serial.println("NO LAUNCH--------------------");
-    }
+
   }
   else if (launch_flag == true && drogue_flag == false) {
     
     if (fall_counter > 3 && pre_alt - alt > 0) {
       drogue_flag = true;
       stage = 1;
+
       digitalWrite(drogue_1, HIGH);
       delay(charge_delay);
       digitalWrite(drogue_1, LOW);
-      // Serial.println("DROGUE 1 FIRE++++++++++++++++++++");
       delay(backup_delay);
+
       digitalWrite(drogue_2, HIGH);
       delay(charge_delay);
       digitalWrite(drogue_2, LOW);
-      // Serial.println("DROGUE 2 FIRE++++++++++++++++++++");
+
       writeSD("DROGUE EJECTED");
     }
     else if (pre_alt - alt > 0) {
       fall_counter = fall_counter + 1;
-      // Serial.println("FALLING--------------------");
     }
     else {
       fall_counter = 0;
-      // Serial.println("NO FALL--------------------");
     }
 
   }
   else if (launch_flag == true && main_flag == false) {
     
-    if (alt < 1000) { // eject condition for main - 1,750 ft alt
+    if (alt < 1000) { // eject condition for main - 1,000 ft alt
       main_flag = true;
       stage = 2;
       digitalWrite(main_1, HIGH);
       delay(charge_delay);
       digitalWrite(main_1, LOW);
-      // Serial.println("MAIN 1 FIRE++++++++++++++++++++");
+      
       delay(backup_delay);
       digitalWrite(main_2, HIGH);
       delay(charge_delay);
       digitalWrite(main_2, LOW);
-      // Serial.println("MAIN 2 FIRE++++++++++++++++++++");
+      
       writeSD("MAIN EJECTED");
     }
-    else {
-      // Serial.println("FALLING--------------------");
-    }
-  }
-  else {
-  
 
-  
   }
 
   pre_alt = alt;

@@ -49,64 +49,67 @@ void writeSD(String data) {
 
 void setup() {
 
-  // tone(buzzer, 3000, 5000);
+  tone(buzzer, 3000, 5000);
 
-  Serial.print("FLIGHT COMPUTER ON\n");
+  // Serial.print("FLIGHT COMPUTER ON\n");
 
   Serial.begin(115200);
   mySerial.begin(57600);
 
-  Serial.print("Initializing SD card...");
+  // Serial.print("Initializing SD card...");
   if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.print("card failed, or not present.\n");
-    // exit(0);
+    // Serial.print("card failed, or not present.\n");
+    tone(buzzer, 3000, 5000);
+    exit(0);
   }
-  Serial.print("SD-CARD initialized.\n");
+  // Serial.print("SD-CARD initialized.\n");
 
-  Serial.print("Connecting to BMP3XX...");
+  // Serial.print("Connecting to BMP3XX...");
   if (!bmp.begin_I2C(0x77)) {
-    Serial.print("sensor not found, check wiring!\n");
+    // Serial.print("sensor not found, check wiring!\n");
+    tone(buzzer, 2000, 10000);
     writeSD("BMP3XX not found");
-    // exit(0);
+    exit(0);
   }
-  Serial.print("BMP3XX found.\n");
+  // Serial.print("BMP3XX found.\n");
 
-  Serial.print("Connecting to LSM6DS3TR-C...");
+  // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C(0x6A)) {
-    Serial.print("sensor not found, check wiring!\n");
+    // Serial.print("sensor not found, check wiring!\n");
     writeSD("LSM6DS3TR-C not found");
-    // exit(0);
+    tone(buzzer, 3000, 5000);
+    exit(0);
   }
-  Serial.print("LSM6DS3TR-C found.\n");
+  // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
-  Serial.print("Connecting to LIS3MDL...");
+  // Serial.print("Connecting to LIS3MDL...");
   if (!mdl.begin_I2C(0x1C)) {
-    Serial.print("sensor not found, check wiring!\n");
+    // Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
     writeSD("LIS3MDL not found");
     // exit(0);
   }
-  Serial.print("LIS3MDL found.\n");
+  // Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
-  Serial.print("Connecting to LIS3DH...");
+  // Serial.print("Connecting to LIS3DH...");
   if (!lis.begin(0x18)) {
-    Serial.print("sensor not found, check wiring!\n");
+    // Serial.print("sensor not found, check wiring!\n");
     lis3dh = false;
     writeSD("LIS3DH not found");
     // exit(0);
   }
-  Serial.print("LIS3DH found.\n");  
+  // Serial.print("LIS3DH found.\n");  
   
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
 
-  launch_flag = false;
+  launch_flag = true;
   drogue_flag = false;
   main_flag = false;
   fall_counter = 0;
   pre_alt = 0;
-  stage = -1;
+  stage = 0;
 
   writeSD("Successful Initialization");
 }
@@ -121,12 +124,12 @@ float mag_x, mag_y, mag_z;
 float acc_x_2, acc_y_2, acc_z_2;
 
 void loop() {
-
-  // tone(buzzer, 2000, 1000); // comment out for actual flight
+  // tone(buzzer, 2000, 500); // comment out for actual flight
   
   if (! bmp.performReading()) {
-    Serial.println("BMP failed to perform reading.\n");
-    Serial.println("### -- Flight Computer Crashed. -- ###\n");
+    // Serial.println("BMP failed to perform reading.\n");
+    writeSD("BMP3XX Sensor Failure");
+    tone(buzzer, 2000, 500);
     exit(0);
   }
   
@@ -144,7 +147,7 @@ void loop() {
   gyro_x = gyro.gyro.x;
   gyro_y = gyro.gyro.y;
   gyro_z = gyro.gyro.z;
-  
+
   if (lis3mdl) {
     sensors_event_t mag;
     mdl.getEvent(&mag);
@@ -170,6 +173,69 @@ void loop() {
     acc_y_2 = 0.0;
     acc_z_2 = 0.0;
   }
+  
+  // {tasks} ------------------------------------
+  if (launch_flag == false) {
+
+    if (abs(acc_x) > 30) {      // launch condition for rocket - acceleration spikes
+      launch_flag = true;
+      stage = 0;
+    }
+    else if (abs(acc_y) > 30) { // launch condition for rocket - acceleration spikes
+      launch_flag = true;
+      stage = 0;
+    }
+    else if (abs(acc_z) > 30) { // launch condition for rocket - acceleration spikes
+      launch_flag = true;
+      stage = 0;
+    }
+
+  }
+  else if (launch_flag == true && drogue_flag == false) {
+    
+    if (fall_counter > 3 && pre_alt - alt > 0) {
+      drogue_flag = true;
+      stage = 1;
+
+      digitalWrite(drogue_1, HIGH);
+      delay(charge_delay);
+      digitalWrite(drogue_1, LOW);
+      delay(backup_delay);
+
+      digitalWrite(drogue_2, HIGH);
+      delay(charge_delay);
+      digitalWrite(drogue_2, LOW);
+
+      writeSD("DROGUE EJECTED");
+    }
+    else if (pre_alt - alt > 0) {
+      fall_counter = fall_counter + 1;
+    }
+    else {
+      fall_counter = 0;
+    }
+
+  }
+  else if (launch_flag == true && main_flag == false) {
+    
+    if (alt < 1000) { // eject condition for main - 1,000 ft alt
+      main_flag = true;
+      stage = 2;
+      digitalWrite(main_1, HIGH);
+      delay(charge_delay);
+      digitalWrite(main_1, LOW);
+      
+      delay(backup_delay);
+      digitalWrite(main_2, HIGH);
+      delay(charge_delay);
+      digitalWrite(main_2, LOW);
+      
+      writeSD("MAIN EJECTED");
+    }
+
+  }
+
+  pre_alt = alt;
 
   // {datalogging} ------------------------------------
   String dataString = String(alt) + "," + 
@@ -193,7 +259,6 @@ void loop() {
   mySerial.println(dataString);
   
   writeSD(dataString);
-  
   // --------------------------------------------------
   delay(delay_time);
 }
