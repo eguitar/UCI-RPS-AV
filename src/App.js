@@ -13,7 +13,7 @@ import AltMeter from './components/AltMeter.jsx'
 import PresMeter from './components/PresMeter.jsx'
 import States from './components/States.jsx'
 
-const download = (data) => {
+function download(data) {
   // Create a Blob with the CSV data and type
   const blob = new Blob([data], { type: 'text/csv' });
   
@@ -31,13 +31,13 @@ const download = (data) => {
   a.click();
 }
 
-const saveData = (data) => {
+function saveData(data) {
   const headers = ['Altitude','Temperature','Pressure','Acceleration_X','Acceleration_Y','Acceleration_Z',
     'Gyroscope_X','Gyroscope_Y','Gyroscope_Z','Magnetometer_X','Magnetometer_Y','Magnetometer_Z','Acceleration2_X',
     'Acceleration2_Y','Acceleration2_Z'];
   const values = Object.values(data);
   const csvData = [headers.join(','), values.join(',')].join('\n');
-  download(csvData)
+  download(csvData);
 }
 
 function App() {
@@ -108,7 +108,7 @@ function App() {
         <div className="title">
             <p class="alignleft"></p>
             <h1 style={{ fontSize: '2.5em', width: "33.33333%", textAlign:"center", float: "left"}}>UCI Rocket Project Solids - Ground Station</h1>
-            <p class="alignright"><button class="save-button" type="button" onClick={saveData(sensorData)}>Save Data</button></p>
+            <p class="alignright"><button class="save-button" type="button" onClick={() => saveData(sensorData)}>Save Data</button></p>
           </div>
         </header>
         <main class="page-content">
