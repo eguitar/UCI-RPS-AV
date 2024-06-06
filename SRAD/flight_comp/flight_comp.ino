@@ -21,7 +21,7 @@ Adafruit_LSM6DS3TRC lsm;
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 SoftwareSerial mySerial(0,1); // RX, TX
 // ----------------------------
-const int delay_time = 1000;
+const int delay_time = 10;
 const int charge_delay = 500;
 const int backup_delay = 2500;
 bool launch_flag;
@@ -71,15 +71,23 @@ void setup() {
     writeSD("BMP3XX not found");
     exit(0);
   }
+  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  bmp.setOutputDataRate(BMP3_ODR_200_HZ);
   // Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("LSM6DS3TR-C not found");
-    tone(buzzer, 3000, 5000);
+    tone(buzzer, 2000, 10000);
     exit(0);
   }
+  lsm.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
+  lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
+  lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
+  lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ)
   // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
@@ -90,6 +98,9 @@ void setup() {
     writeSD("LIS3MDL not found");
     // exit(0);
   }
+  mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE)
+  mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+  mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
@@ -100,6 +111,7 @@ void setup() {
     writeSD("LIS3DH not found");
     // exit(0);
   }
+  lis.setDataRate(LIS3DH_DATARATE_50_HZ)
   // Serial.print("LIS3DH found.\n");  
   
   Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
@@ -112,11 +124,31 @@ void setup() {
   stage = -1;
 
   writeSD("Successful Initialization");
+
+  String dataString = "Time(ms)," +
+                      "Altitude(m)," +
+                      "Temperature(C)," +
+                      "Pressure(hPa)," +
+                      "X-Acceleration(m/s^2)," +
+                      "Y-Acceleration(m/s^2)," +
+                      "Z-Acceleration(m/s^2)," +
+                      "X-Angular Velocity(rad/s)," +
+                      "Y-Angular Velocity(rad/s)," +
+                      "Z-Angular Velocity(rad/s)," +
+                      "X-Magnetic Field(uT)," +
+                      "Y-Magnetic Field(uT)," +
+                      "Z-Magnetic Field(uT)," +
+                      "X-Acceleration(m/s^2)," +
+                      "Y-Acceleration(m/s^2)," +
+                      "Z-Acceleration(m/s^2)," +
+                      "Flight Stage";
+  writeSD(dataString);
 }
 
 // #######################################################################
 // #######################################################################
 
+float time;
 float alt, temp, pres;
 float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
@@ -126,6 +158,8 @@ float acc_x_2, acc_y_2, acc_z_2;
 void loop() {
   // tone(buzzer, 2000, 500); // comment out for actual flight
   
+  time = millis()
+
   if (! bmp.performReading()) {
     // Serial.println("BMP failed to perform reading.\n");
     writeSD("BMP3XX Sensor Failure");
@@ -238,7 +272,8 @@ void loop() {
   pre_alt = alt;
 
   // {datalogging} ------------------------------------
-  String dataString = String(alt) + "," + 
+  String dataString = String(time) + "," +
+                      String(alt) + "," + 
                       String(temp) + "," + 
                       String(pres) + "," +
                       String(acc_x) + "," +
