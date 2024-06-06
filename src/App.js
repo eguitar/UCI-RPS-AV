@@ -49,7 +49,6 @@ function resetData(data) {
     acc_x_2: [], acc_y_2: [], acc_z_2: [], state: []
   };
   alert("Deleted Data");
-  download(csvData);
 }
 
 function App() {
