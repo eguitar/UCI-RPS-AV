@@ -40,6 +40,17 @@ function saveData(data) {
   download(csvData);
 }
 
+function resetData(data) {
+  data = {
+    alt: [], temp: [], pres: [],
+    acc_x: [], acc_y: [], acc_z: [],
+    gyro_x: [], gyro_y: [], gyro_z: [],
+    mag_x: [], mag_y: [], mag_z: [],
+    acc_x_2: [], acc_y_2: [], acc_z_2: [], state: []
+  };
+  alert("Deleted Data");
+}
+
 function App() {
   const [sensorData, setSensorData] = useState({
     alt: [], temp: [], pres: [],
@@ -106,7 +117,7 @@ function App() {
       <body>
         <header class="page-title">
         <div className="title">
-            <p class="alignleft"></p>
+            <p class="alignleft"><button class="reset-button" type="button" onClick={() => resetData(sensorData)}>Reset Data</button></p>
             <h1 style={{ fontSize: '2.5em', width: "33.33333%", textAlign:"center", float: "left"}}>UCI Rocket Project Solids - Ground Station</h1>
             <p class="alignright"><button class="save-button" type="button" onClick={() => saveData(sensorData)}>Save Data</button></p>
           </div>
