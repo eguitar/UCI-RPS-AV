@@ -59,7 +59,7 @@ void setup() {
   // Serial.print("Initializing SD card...");
   if (!SD.begin(BUILTIN_SDCARD)) {
     // Serial.print("card failed, or not present.\n");
-    tone(buzzer, 3000, 5000);
+    tone(buzzer, 2000, 10000);
     exit(0);
   }
   // Serial.print("SD-CARD initialized.\n");
@@ -111,11 +111,9 @@ void setup() {
     writeSD("LIS3DH not found");
     // exit(0);
   }
-  lis.setDataRate(LIS3DH_DATARATE_50_HZ)
+  lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3DH found.\n");  
   
-  Serial.print("Altitude, Temperature, Pressure, Acceleration [X, Y, Z] (m/s^2), Orientation [X, Y, Z] (rad/s), Magnetic Field [X, Y, Z] (uTesla):\n");
-
   launch_flag = false;
   drogue_flag = false;
   main_flag = false;
@@ -158,7 +156,7 @@ float acc_x_2, acc_y_2, acc_z_2;
 void loop() {
   // tone(buzzer, 2000, 500); // comment out for actual flight
   
-  time = millis()
+  time = millis();
 
   if (! bmp.performReading()) {
     // Serial.println("BMP failed to perform reading.\n");
