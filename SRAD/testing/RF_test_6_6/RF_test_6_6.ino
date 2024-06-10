@@ -21,7 +21,7 @@ Adafruit_LSM6DS3TRC lsm;
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 SoftwareSerial mySerial(0,1); // RX, TX
 // ----------------------------
-const int delay_time = 10;
+const int delay_time = 100;
 const int charge_delay = 500;
 const int backup_delay = 2500;
 bool launch_flag;
@@ -32,6 +32,8 @@ bool lis3dh;
 int stage;
 int fall_counter;
 float pre_alt;
+float alt;
+float start_time;
 
 // #######################################################################
 // #######################################################################
@@ -55,6 +57,8 @@ void setup() {
 
   Serial.begin(115200);
   mySerial.begin(57600);
+
+  start_time = millis();
 
   // // Serial.print("Initializing SD card...");
   // if (!SD.begin(BUILTIN_SDCARD)) {
@@ -144,22 +148,26 @@ void setup() {
   //                     "Flight Stage";
   // writeSD(dataString);
   Serial.println("START");
+  alt = 0;
 }
 
 // #######################################################################
 // #######################################################################
 
 float ms;
-float alt, temp, pres;
+// float alt, temp, pres;
+float temp, pres;
 float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
 float mag_x, mag_y, mag_z;
 float acc_x_2, acc_y_2, acc_z_2;
 
+
+
 void loop() {
   // tone(buzzer, 2000, 500); // comment out for actual flight
   
-  ms = millis();
+  ms = millis() - start_time;
 
   // if (! bmp.performReading()) {
   //   // Serial.println("BMP failed to perform reading.\n");
@@ -274,7 +282,7 @@ void loop() {
 
   // {datalogging} ------------------------------------
   String dataString = String(ms) + "," +
-                      0 + "," + 
+                      String(alt) + "," + 
                       0 + "," + 
                       0 + "," +
                       0 + "," +
@@ -297,6 +305,8 @@ void loop() {
   // writeSD(dataString);
   // --------------------------------------------------
   delay(delay_time);
+
+  alt = alt + 1;
 }
 
 // #######################################################################

@@ -21,7 +21,7 @@ Adafruit_LSM6DS3TRC lsm;
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 SoftwareSerial mySerial(0,1); // RX, TX
 // ----------------------------
-const int delay_time = 10;
+const int delay_time = 100;
 const int charge_delay = 500;
 const int backup_delay = 2500;
 bool launch_flag;
@@ -250,7 +250,7 @@ void loop() {
   }
   else if (launch_flag == true && main_flag == false) {
     
-    if (alt < 1000) { // eject condition for main - 1,000 ft alt
+    if (alt < 750) { // eject condition for main - 750 ft alt
       main_flag = true;
       stage = 2;
       digitalWrite(main_1, HIGH);
