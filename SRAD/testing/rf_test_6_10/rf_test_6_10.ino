@@ -37,16 +37,16 @@ float start_time;
 // #######################################################################
 // #######################################################################
 
-// void writeSD(String data) {
-//   File dataFile = SD.open("data_log.csv", FILE_WRITE);  
-//   if (dataFile) {
-//     dataFile.println(data);
-//     dataFile.close();
-//   }
-//   else {
-//     Serial.println("Error Opening Data File.\n");
-//   }
-// }
+void writeSD(String data) {
+  File dataFile = SD.open("data_log.csv", FILE_WRITE);  
+  if (dataFile) {
+    dataFile.println(data);
+    dataFile.close();
+  }
+  else {
+    Serial.println("Error Opening Data File.\n");
+  }
+}
 
 void setup() {
 
@@ -60,37 +60,37 @@ void setup() {
   start_time = millis();
 
   // Serial.print("Initializing SD card...");
-  // if (!SD.begin(BUILTIN_SDCARD)) {
-  //   // Serial.print("card failed, or not present.\n");
-  //   tone(buzzer, 2000, 10000);
-  //   exit(0);
-  // }
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    // Serial.print("card failed, or not present.\n");
+    tone(buzzer, 2000, 10000);
+    exit(0);
+  }
   // Serial.print("SD-CARD initialized.\n");
 
   // Serial.print("Connecting to BMP3XX...");
   if (!bmp.begin_I2C(0x77)) {
     // Serial.print("sensor not found, check wiring!\n");
     tone(buzzer, 2000, 10000);
-    // writeSD("BMP3XX not found");
+    writeSD("BMP3XX not found");
     exit(0);
   }
-  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
-  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
-  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
-  bmp.setOutputDataRate(BMP3_ODR_200_HZ);
+  // bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
+  // bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+  // bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  // bmp.setOutputDataRate(BMP3_ODR_200_HZ);
   // Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
-    // writeSD("LSM6DS3TR-C not found");
+    writeSD("LSM6DS3TR-C not found");
     tone(buzzer, 2000, 10000);
     exit(0);
   }
   lsm.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
-  lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
-  lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
-  lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+  // lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
+  // lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
+  // lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
   // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
@@ -98,12 +98,12 @@ void setup() {
   if (!mdl.begin_I2C(0x1C)) {
     // Serial.print("sensor not found, check wiring!\n");
     lis3mdl = false;
-    // writeSD("LIS3MDL not found");
+    writeSD("LIS3MDL not found");
     // exit(0);
   }
-  mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
-  mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
-  mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
+  // mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+  // mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
@@ -111,10 +111,10 @@ void setup() {
   if (!lis.begin(0x18)) {
     // Serial.print("sensor not found, check wiring!\n");
     lis3dh = false;
-    // writeSD("LIS3DH not found");
+    writeSD("LIS3DH not found");
     // exit(0);
   }
-  lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3DH found.\n");  
   
   launch_flag = false;
@@ -124,26 +124,9 @@ void setup() {
   pre_alt = 0;
   stage = -1;
 
-  // writeSD("Successful Initialization");
-
-  // String dataString = "Time(ms)," +
-  //                     "Altitude(m)," +
-  //                     "Temperature(C)," +x
-  //                     "Pressure(hPa)," +
-  //                     "X-Acceleration(m/s^2)," +
-  //                     "Y-Acceleration(m/s^2)," +
-  //                     "Z-Acceleration(m/s^2)," +
-  //                     "X-Angular Velocity(rad/s)," +
-  //                     "Y-Angular Velocity(rad/s)," +
-  //                     "Z-Angular Velocity(rad/s)," +
-  //                     "X-Magnetic Field(uT)," +
-  //                     "Y-Magnetic Field(uT)," +
-  //                     "Z-Magnetic Field(uT)," +
-  //                     "X-Acceleration(m/s^2)," +
-  //                     "Y-Acceleration(m/s^2)," +
-  //                     "Z-Acceleration(m/s^2)," +
-  //                     "Flight Stage";
-  // writeSD(dataString);
+  writeSD("Successful Initialization");
+  String dataString = "Time(ms),Altitude(m),Temperature(C),Pressure(hPa),X-Acceleration(m/s^2),Y-Acceleration(m/s^2),Z-Acceleration(m/s^2),X-Angular Velocity(rad/s),Y-Angular Velocity(rad/s),Z-Angular Velocity(rad/s),X-Magnetic Field(uT),Y-Magnetic Field(uT),Z-Magnetic Field(uT),X-Acceleration(m/s^2),Y-Acceleration(m/s^2),Z-Acceleration(m/s^2),Flight Stage";
+  writeSD(dataString);
 }
 
 // #######################################################################
@@ -163,7 +146,7 @@ void loop() {
 
   if (! bmp.performReading()) {
     // Serial.println("BMP failed to perform reading.\n");
-    // writeSD("BMP3XX Sensor Failure");
+    writeSD("BMP3XX Sensor Failure");
     // tone(buzzer, 2000, 500);
     exit(0);
   }
@@ -294,7 +277,7 @@ void loop() {
   Serial.println(dataString);
   mySerial.println(dataString);
   
-  // writeSD(dataString);
+  writeSD(dataString);
   // --------------------------------------------------
   delay(delay_time);
 }

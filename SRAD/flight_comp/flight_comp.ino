@@ -32,6 +32,7 @@ bool lis3dh;
 int stage;
 int fall_counter;
 float pre_alt;
+float start_time;
 
 // #######################################################################
 // #######################################################################
@@ -55,6 +56,8 @@ void setup() {
 
   Serial.begin(115200);
   mySerial.begin(57600);
+
+  start_time = millis();
 
   // Serial.print("Initializing SD card...");
   if (!SD.begin(BUILTIN_SDCARD)) {
@@ -80,25 +83,25 @@ void setup() {
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
-    writeSD("LSM6DS3TR-C not found");
     tone(buzzer, 2000, 10000);
+    writeSD("LSM6DS3TR-C not found");
     exit(0);
   }
   lsm.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
   lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
   lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
-  lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ)
+  lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
   // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
   // Serial.print("Connecting to LIS3MDL...");
   if (!mdl.begin_I2C(0x1C)) {
     // Serial.print("sensor not found, check wiring!\n");
-    lis3mdl = false;
     writeSD("LIS3MDL not found");
+    lis3mdl = false;
     // exit(0);
   }
-  mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE)
+  mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
   mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
   mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3MDL found.\n");
@@ -107,8 +110,8 @@ void setup() {
   // Serial.print("Connecting to LIS3DH...");
   if (!lis.begin(0x18)) {
     // Serial.print("sensor not found, check wiring!\n");
-    lis3dh = false;
     writeSD("LIS3DH not found");
+    lis3dh = false;
     // exit(0);
   }
   lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -122,31 +125,14 @@ void setup() {
   stage = -1;
 
   writeSD("Successful Initialization");
-
-  String dataString = "Time(ms)," +
-                      "Altitude(m)," +
-                      "Temperature(C)," +
-                      "Pressure(hPa)," +
-                      "X-Acceleration(m/s^2)," +
-                      "Y-Acceleration(m/s^2)," +
-                      "Z-Acceleration(m/s^2)," +
-                      "X-Angular Velocity(rad/s)," +
-                      "Y-Angular Velocity(rad/s)," +
-                      "Z-Angular Velocity(rad/s)," +
-                      "X-Magnetic Field(uT)," +
-                      "Y-Magnetic Field(uT)," +
-                      "Z-Magnetic Field(uT)," +
-                      "X-Acceleration(m/s^2)," +
-                      "Y-Acceleration(m/s^2)," +
-                      "Z-Acceleration(m/s^2)," +
-                      "Flight Stage";
+  String dataString = "Time(ms),Altitude(m),Temperature(C),Pressure(hPa),X-Acceleration(m/s^2),Y-Acceleration(m/s^2),Z-Acceleration(m/s^2),X-Angular Velocity(rad/s),Y-Angular Velocity(rad/s),Z-Angular Velocity(rad/s),X-Magnetic Field(uT),Y-Magnetic Field(uT),Z-Magnetic Field(uT),X-Acceleration(m/s^2),Y-Acceleration(m/s^2),Z-Acceleration(m/s^2),Flight Stage";
   writeSD(dataString);
 }
 
 // #######################################################################
 // #######################################################################
 
-float time;
+float ms;
 float alt, temp, pres;
 float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
@@ -156,7 +142,7 @@ float acc_x_2, acc_y_2, acc_z_2;
 void loop() {
   // tone(buzzer, 2000, 500); // comment out for actual flight
   
-  time = millis();
+  ms = millis() - start_time;
 
   if (! bmp.performReading()) {
     // Serial.println("BMP failed to perform reading.\n");
@@ -270,7 +256,7 @@ void loop() {
   pre_alt = alt;
 
   // {datalogging} ------------------------------------
-  String dataString = String(time) + "," +
+  String dataString = String(ms) + "," +
                       String(alt) + "," + 
                       String(temp) + "," + 
                       String(pres) + "," +
