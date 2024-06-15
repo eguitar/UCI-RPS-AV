@@ -50,7 +50,7 @@ void writeSD(String data) {
 
 void setup() {
 
-  tone(buzzer, 3000, 5000);
+  // tone(buzzer, 3000, 5000);
 
   // Serial.print("FLIGHT COMPUTER ON\n");
 
@@ -62,7 +62,7 @@ void setup() {
   // Serial.print("Initializing SD card...");
   if (!SD.begin(BUILTIN_SDCARD)) {
     // Serial.print("card failed, or not present.\n");
-    tone(buzzer, 2000, 10000);
+    // tone(buzzer, 2000, 10000);
     exit(0);
   }
   // Serial.print("SD-CARD initialized.\n");
@@ -70,13 +70,13 @@ void setup() {
   // Serial.print("Connecting to BMP3XX...");
   if (!bmp.begin_I2C(0x77)) {
     // Serial.print("sensor not found, check wiring!\n");
-    tone(buzzer, 2000, 10000);
+    // tone(buzzer, 2000, 10000);
     writeSD("BMP3XX not found");
     exit(0);
   }
-  // bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
-  // bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
-  // bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
   // bmp.setOutputDataRate(BMP3_ODR_200_HZ);
   // Serial.print("BMP3XX found.\n");
 
@@ -84,7 +84,7 @@ void setup() {
   if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
     writeSD("LSM6DS3TR-C not found");
-    tone(buzzer, 2000, 10000);
+    // tone(buzzer, 2000, 10000);
     exit(0);
   }
   lsm.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
@@ -236,7 +236,7 @@ void loop() {
   // }
   // else if (launch_flag == true && main_flag == false) {
     
-  //   if (alt < 750) { // eject condition for main - 750 ft alt
+  //   if (alt < 1000) { // eject condition for main - 750 ft alt
   //     main_flag = true;
   //     stage = 2;
   //     digitalWrite(main_1, HIGH);

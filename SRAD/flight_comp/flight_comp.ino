@@ -52,8 +52,6 @@ void setup() {
 
   tone(buzzer, 3000, 5000);
 
-  // Serial.print("FLIGHT COMPUTER ON\n");
-
   Serial.begin(115200);
   mySerial.begin(57600);
 
@@ -77,44 +75,44 @@ void setup() {
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
-  bmp.setOutputDataRate(BMP3_ODR_200_HZ);
+  // bmp.setOutputDataRate(BMP3_ODR_200_HZ);
   // Serial.print("BMP3XX found.\n");
 
   // Serial.print("Connecting to LSM6DS3TR-C...");
   if (!lsm.begin_I2C(0x6A)) {
     // Serial.print("sensor not found, check wiring!\n");
-    tone(buzzer, 2000, 10000);
     writeSD("LSM6DS3TR-C not found");
+    tone(buzzer, 2000, 10000);
     exit(0);
   }
   lsm.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
-  lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
-  lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
-  lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+  // lsm.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
+  // lsm.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
+  // lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
   // Serial.print("LSM6DS3TR-C found.\n");
 
   lis3mdl = true;
   // Serial.print("Connecting to LIS3MDL...");
   if (!mdl.begin_I2C(0x1C)) {
     // Serial.print("sensor not found, check wiring!\n");
-    writeSD("LIS3MDL not found");
     lis3mdl = false;
+    writeSD("LIS3MDL not found");
     // exit(0);
   }
-  mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
-  mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
-  mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
+  // mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+  // mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);  // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3MDL found.\n");
 
   lis3dh = true;
   // Serial.print("Connecting to LIS3DH...");
   if (!lis.begin(0x18)) {
     // Serial.print("sensor not found, check wiring!\n");
-    writeSD("LIS3DH not found");
     lis3dh = false;
+    writeSD("LIS3DH not found");
     // exit(0);
   }
-  lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // lis.setDataRate(LIS3DH_DATARATE_50_HZ);   // CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Serial.print("LIS3DH found.\n");  
   
   launch_flag = false;
@@ -236,7 +234,7 @@ void loop() {
   }
   else if (launch_flag == true && main_flag == false) {
     
-    if (alt < 750) { // eject condition for main - 750 ft alt
+    if (alt < 1000) { // eject condition for main - 750 ft alt
       main_flag = true;
       stage = 2;
       digitalWrite(main_1, HIGH);
